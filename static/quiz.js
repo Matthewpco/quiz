@@ -1,4 +1,4 @@
-// I'm checking new branch now!
+// Working on randomization feature
 const questions = [
     {
         question: "What is Athena's favorite animal?",
@@ -26,7 +26,10 @@ const questions = [
         answer: "Marvel, no question"
     }
 ];
- 
+// Randomly select 3 questions from array of all possible questions 
+// Source: https://stackoverflow.com/questions/19269545/how-to-get-n-no-elements-randomly-from-an-array/38571132
+let selected_questions = questions.sort(() => .5 - Math.random()).slice(0,3)
+
 let question_number = 0;
 let correct = 0;
  
@@ -35,21 +38,21 @@ document.addEventListener("DOMContentLoaded", () => {
 });
  
 function load_question() {
-    document.querySelector("#question").innerHTML = questions[question_number].question;
+    document.querySelector("#question").innerHTML = selected_questions[question_number].question;
     const options = document.querySelector("#options");
     options.innerHTML = "";
-    for (const option of questions[question_number].options) {
+    for (const option of selected_questions[question_number].options) {
         options.innerHTML += `<button class="option">${option}</button>`;
     }
  
     document.querySelectorAll(".option").forEach(option => {
         option.onclick = () => {
-            if (option.textContent == questions[question_number].answer) {
+            if (option.textContent == selected_questions[question_number].answer) {
                 correct++;
             }
             question_number++;
             progress();
-            if (question_number != questions.length) { // I it's the last question, don't load question
+            if (question_number != selected_questions.length) { // I it's the last question, don't load question
                 load_question();
             }
             else {
@@ -70,4 +73,7 @@ function complete() {
     options.innerHTML = "";
     document.querySelector("#correct").innerHTML = `Final Score: ${correct} of ${question_number}`;
     document.querySelector("#correct").style.fontSize = "50px";
+    if (correct == question_number) {
+        document.querySelector("#options").innerHTML += `<div style="background-image: url(fireworks.gif); display: block; margin: auto; height: 400px; width: 400px;"></div>`
+    }
 }
